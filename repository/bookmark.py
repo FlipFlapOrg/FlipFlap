@@ -13,15 +13,14 @@ class BookmarkDB(DB):
     def __init__(self):
         super().__init__('bookmark')
 
-    def add_bookmark(self, user_id: str, manga_id: str) -> Optional[str]:
+    def add_bookmark(self, user_id: str, manga_id: str) -> bool:
         created_at = datetime.datetime.now()
         bookmark = Bookmark(manga_id=manga_id,
                             user_id=user_id, created_at=created_at)
-        res = self.insert_ignore(dict(bookmark), [
-                                 'user_id', 'manga_id'])
+        res = self.insert_ignore(dict(bookmark), ['user_id', 'manga_id'])
         if res == False:
-            return None
-        return res
+            return False
+        return True
 
     def delete_bookmark(self, user_id: str, manga_id: str) -> None:
         self.delete(dict(user_id=user_id, manga_id=manga_id))
@@ -37,6 +36,8 @@ class BookmarkDB(DB):
             'SELECT * FROM tag_manga WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
         tags = {}
         for tag in tag_res:
+            if tag is None:
+                continue
             if tag['manga_id'] not in tags:
                 tags[tag['manga_id']] = []
             tags[tag['manga_id']].append(tag['tag'])
@@ -50,7 +51,7 @@ class BookmarkDB(DB):
             page_num=r['page_num'],
             is_faved=False,  # TODO: implement this
             is_bookmarked=True,
-        ) for r in res]
+        ) for r in res if r is not None]
 
 
 bookmark_db = BookmarkDB()

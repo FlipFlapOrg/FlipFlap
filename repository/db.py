@@ -36,5 +36,5 @@ class DB(metaclass=ABCMeta):
     def query(self, query: str, *args, **kwargs):
         return db.query(query, *args, **kwargs)
 
-    def insert_ignore(self, row: dict, keys: dict, ensure=None, types=None):
+    def insert_ignore(self, row: dict, keys: list, ensure=None, types=None):
         return self.table.insert_ignore(row, keys, ensure=None, types=None)
