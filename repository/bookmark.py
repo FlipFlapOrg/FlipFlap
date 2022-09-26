@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from domain.bookmark import Bookmark
 from domain.manga import Manga
+from handler.schema import UserMangaResponse
 
 from repository.db import DB
 
@@ -25,10 +26,21 @@ class BookmarkDB(DB):
         res = self.find_one(dict(user_id=user_id, manga_id=manga_id))
         return res is not None
 
-    def get_bookmarks(self, user_id: str) -> List[Manga]:
+    def get_bookmarks(self, user_id: str) -> List[UserMangaResponse]:
         res = self.query(
-            'SELECT * FROM bookmark INNER JOIN manga ON bookmark.manga_id = manga.manga_id WHERE user_id = ?', user_id)
-        return [Manga(**r) for r in res]
+            'SELECT * FROM bookmark INNER JOIN manga ON bookmark.manga_id = manga.manga_id WHERE user_id = :user_id', {'user_id': user_id})
+        # for r in res:
+        #     print(dict(r))
+
+        return [UserMangaResponse(
+            manga_id=r['manga_id'],
+            title=r['title'],
+            author=r['author'],
+            tags=[],
+            manga_url=r['manga_url'],
+            is_faved=False,  # TODO: implement this
+            is_bookmarked=True,
+        ) for r in res]
 
 
 bookmark_db = BookmarkDB()
