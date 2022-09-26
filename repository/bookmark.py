@@ -22,7 +22,7 @@ class BookmarkDB(DB):
         return self.delete(dict(user_id=user_id, manga_id=manga_id))
 
     def is_bookmark(self, user_id: str, manga_id: str) -> bool:
-        res = self.find(dict(user_id=user_id, manga_id=manga_id))
+        res = self.find_one(dict(user_id=user_id, manga_id=manga_id))
         return res is not None
 
     def get_user_bookmarks(self, user_id: str) -> List[Manga]:
