@@ -25,5 +25,5 @@ async def validation_exception_handler(request, exc):
     return JSONResponse(status_code=400, content={"detail": exc.errors()})
 
 @app.get("/")
-def read_root():
+async def read_root():
     return {"site_intro": "This is description of the site."}

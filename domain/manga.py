@@ -4,3 +4,5 @@ class Manga(BaseModel):
     manga_id: str
     title: str
     author: str
+    page_num: int
+    is_completed: bool = False

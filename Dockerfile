@@ -2,7 +2,7 @@ FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apk add  --no-cache build-base
+RUN apk add  --no-cache build-base mariadb-dev
 
 RUN mkdir -p /app
 WORKDIR /app

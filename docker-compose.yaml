@@ -11,9 +11,12 @@ services:
       MARIADB_PASSWORD: password
       MARIADB_HOSTNAME: db
       MARIADB_DATABASE: flipflap
+      DATABASE_URL: mysql://user:password@db/flipflap
+    volumes:
+      - ./data:/tmp
     depends_on:
       - db
-    
+
   db:
     image: mariadb:latest
     environment:
