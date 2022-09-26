@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, HTTPException
 from handler.bookmark import (
     get_user_bookmarks, add_user_bookmark, delete_user_bookmark)
 from handler.schema import UserMangaResponse, BookmarkRequest
@@ -15,6 +15,10 @@ async def get_bookmarks(user_id: str):
 
 @router.post("/{user_id}/bookmarks", response_model=UserMangaResponse)
 async def post_bookmark(req: BookmarkRequest):
+    res = add_user_bookmark(req)
+    if res is None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail="Conflict with existing bookmark.")
     return add_user_bookmark(req)
 
 
