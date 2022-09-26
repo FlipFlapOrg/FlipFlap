@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from typing import List, Optional
 
 from domain.bookmark import Bookmark
@@ -13,7 +14,10 @@ class BookmarkDB(DB):
         super().__init__('bookmark')
 
     def add_bookmark(self, user_id: str, manga_id: str) -> Optional[str]:
-        res = self.insert_ignore(dict(user_id=user_id, manga_id=manga_id), [
+        created_at = datetime.datetime.now()
+        bookmark = Bookmark(manga_id=manga_id,
+                            user_id=user_id, created_at=created_at)
+        res = self.insert_ignore(dict(bookmark), [
                                  'user_id', 'manga_id'])
         if res == False:
             return None
