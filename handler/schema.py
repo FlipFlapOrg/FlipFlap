@@ -22,5 +22,5 @@ class MangaResponse(BaseModel):
     manga_id: str
     title: str
     author: str
-    image_url: List[str]
     tags: List[str]
+    page_num: int

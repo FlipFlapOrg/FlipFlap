@@ -50,15 +50,16 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
 
 # POST /manga
 def add_manga(req: MangaRequest) -> MangaResponse:
-    manga = manga_db.add_manga(title=req.title, author=req.author, page_num=req.page_num)
+    manga = manga_db.add_manga(
+        title=req.title, author=req.author, page_num=req.page_num)
     for tag in req.tags:
         tag_manga_db.add_tag_manga(manga_id=manga.manga_id, tag=tag)
     return MangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
         author=manga.author,
-        image_url=[],
-        tags=req.tags
+        tags=req.tags,
+        page_num=manga.page_num,
     )
 
 # GET /manga/{manga_id}
@@ -73,6 +74,6 @@ def get_manga(manga_id: str) -> MangaResponse:
         manga_id=manga.manga_id,
         title=manga.title,
         author=manga.author,
-        image_url=[],
-        tags=[t.tag for t in tags]
+        tags=[t.tag for t in tags],
+        page_num=manga.page_num,
     )
