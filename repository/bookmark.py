@@ -1,9 +1,8 @@
-import uuid
+from collections import defaultdict
 import datetime
-from typing import List, Optional
+from typing import List
 
 from domain.bookmark import Bookmark
-from domain.manga import Manga
 from handler.schema import UserMangaResponse
 
 from repository.db import DB
@@ -32,25 +31,41 @@ class BookmarkDB(DB):
     def get_bookmarks(self, user_id: str) -> List[UserMangaResponse]:
         res = self.query(
             'SELECT * FROM bookmark INNER JOIN manga ON bookmark.manga_id = manga.manga_id WHERE user_id = :user_id', {'user_id': user_id})
+    
         tag_res = self.query(
             'SELECT * FROM tag_manga WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
-        tags = {}
+        tags = defaultdict(list)
         for tag in tag_res:
             if tag is None:
                 continue
-            if tag['manga_id'] not in tags:
-                tags[tag['manga_id']] = []
             tags[tag['manga_id']].append(tag['tag'])
+
+        # TODO: left outer joinで書き直す
+        fav_res = self.query(
+            'SELECT * FROM faves WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
+        faves = defaultdict(lambda: False)
+        for fav in fav_res:
+            if fav is None:
+                continue
+            faves[fav['manga_id']] = True
+
+        bookmark_res = self.query(
+            'SELECT * FROM bookmark WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
+        bookmarks = defaultdict(lambda: False)
+        for fav in bookmark_res:
+            if fav is None:
+                continue
+            bookmarks[fav['manga_id']] = True
 
         return [UserMangaResponse(
             manga_id=r['manga_id'],
             title=r['title'],
             author=r['author'],
-            tags=tags[r['manga_id']] if r['manga_id'] in tags else [],
+            tags=tags[r['manga_id']],
             manga_url=r['manga_url'],
             page_num=r['page_num'],
-            is_faved=False,  # TODO: implement this
-            is_bookmarked=True,
+            is_faved=faves[r['manga_id']],
+            is_bookmarked=bookmarks[r['manga_id']],
         ) for r in res if r is not None]
 
 
