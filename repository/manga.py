@@ -10,10 +10,10 @@ class MangaDB(DB):
     def __init__(self):
         super().__init__('manga')
 
-    def add_manga(self, title: str, author: str, page_num: int) -> Manga:
+    def add_manga(self, title: str, author: str, page_num: int, manga_url: Optional[str]) -> Manga:
         manga_id = uuid.uuid4().hex
         m = Manga(manga_id=manga_id, title=title,
-                  author=author, page_num=page_num)
+                  author=author, page_num=page_num, manga_url=manga_url)
         self.insert(dict(m))
         return m
 

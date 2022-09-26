@@ -17,6 +17,7 @@ class MangaRequest(BaseModel):
     author: str
     tags: List[str]
     page_num: int
+    manga_url: Optional[str] = None
 
 class MangaResponse(BaseModel):
     manga_id: str

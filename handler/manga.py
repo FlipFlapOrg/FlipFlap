@@ -51,7 +51,7 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
 # POST /manga
 def add_manga(req: MangaRequest) -> MangaResponse:
     manga = manga_db.add_manga(
-        title=req.title, author=req.author, page_num=req.page_num)
+        title=req.title, author=req.author, page_num=req.page_num, manga_url=req.manga_url)
     for tag in req.tags:
         tag_manga_db.add_tag_manga(manga_id=manga.manga_id, tag=tag)
     return MangaResponse(
