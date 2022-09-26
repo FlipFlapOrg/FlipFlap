@@ -15,6 +15,9 @@ class DB(metaclass=ABCMeta):
     def insert(self, data: dict):
         self.table.insert(data)
 
+    def insert_many(self, data: List[dict]):
+        self.table.insert_many(data)
+
     def update(self, data: dict, keys: List[str]):
         self.table.update(data, keys)
 
@@ -23,7 +26,7 @@ class DB(metaclass=ABCMeta):
 
     def find_one(self, keys: dict):
         return self.table.find_one(**keys)
-        
+
     def find_query(self, keys: dict):
         return self.table.find(**keys)
 
