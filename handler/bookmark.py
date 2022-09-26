@@ -1,11 +1,10 @@
 from typing import List, Optional
-from handler.schema import UserMangaResponse, BookmarkRequest
-from handler.manga import get_manga
 
 from fastapi import HTTPException, status
-
 from repository.bookmark import bookmark_db
-from repository.manga import manga_db
+
+from handler.manga import get_manga
+from handler.schema import BookmarkRequest, UserMangaResponse
 
 
 # GET /users/{user_id}/bookmarks

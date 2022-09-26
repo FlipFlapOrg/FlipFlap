@@ -45,3 +45,6 @@ class TagRequest(BaseModel):
 
 class TagResponse(BaseModel):
     tags: List[str]
+
+class FaveRequest(BaseModel):
+    manga_id: str

@@ -42,20 +42,12 @@ class BookmarkDB(DB):
 
         # TODO: left outer joinで書き直す
         fav_res = self.query(
-            'SELECT * FROM faves WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
+            'SELECT * FROM faves WHERE manga_id IN (SELECT manga_id FROM faves WHERE user_id = :user_id)', {'user_id': user_id})
         faves = defaultdict(lambda: False)
         for fav in fav_res:
             if fav is None:
                 continue
             faves[fav['manga_id']] = True
-
-        bookmark_res = self.query(
-            'SELECT * FROM bookmark WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
-        bookmarks = defaultdict(lambda: False)
-        for fav in bookmark_res:
-            if fav is None:
-                continue
-            bookmarks[fav['manga_id']] = True
 
         return [UserMangaResponse(
             manga_id=r['manga_id'],
@@ -65,7 +57,7 @@ class BookmarkDB(DB):
             manga_url=r['manga_url'],
             page_num=r['page_num'],
             is_faved=faves[r['manga_id']],
-            is_bookmarked=bookmarks[r['manga_id']],
+            is_bookmarked=True,
         ) for r in res if r is not None]
 
 

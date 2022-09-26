@@ -1,12 +1,13 @@
 from typing import List, Optional
-from fastapi import APIRouter, status, HTTPException
 
 from domain.history import History
-
-from handler.bookmark import (
-    get_user_bookmarks, add_user_bookmark, delete_user_bookmark)
+from fastapi import APIRouter, HTTPException, status
+from handler.bookmark import (add_user_bookmark, delete_user_bookmark,
+                              get_user_bookmarks)
+from handler.faves import add_user_fave, remove_user_fave
 from handler.history import add_history
-from handler.schema import HistoryRequest, TagRequest, TagResponse, UserMangaResponse, BookmarkRequest
+from handler.schema import (BookmarkRequest, FaveRequest, HistoryRequest,
+                            TagRequest, TagResponse, UserMangaResponse)
 from handler.tag import add_user_tags, get_user_tags
 
 router = APIRouter()
@@ -25,6 +26,18 @@ async def post_bookmark(req: BookmarkRequest, user_id: str):
 @router.delete("/{user_id}/bookmarks", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_bookmark(req: BookmarkRequest, user_id: str):
     delete_user_bookmark(req=req, user_id=user_id)
+    return None
+
+
+@router.post("/{user_id}/faves", status_code=status.HTTP_201_CREATED)
+async def post_faves(req: FaveRequest, user_id: str):
+    add_user_fave(req=req, user_id=user_id)
+    return {"message": "Successfully added bookmark."}
+
+
+@router.delete("/{user_id}/faves", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_faves(req: FaveRequest, user_id: str):
+    remove_user_fave(req=req, user_id=user_id)
     return None
 
 
