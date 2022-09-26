@@ -1,20 +1,31 @@
 from typing import List, Optional
+from fastapi import APIRouter, status, HTTPException
 
-from fastapi import APIRouter, Header, HTTPException, status
 from domain.history import History
-from handler.bookmark import get_user_bookmarks
+
+from handler.bookmark import (
+    get_user_bookmarks, add_user_bookmark, delete_user_bookmark)
 from handler.history import add_history
-from handler.schema import HistoryRequest, TagRequest, TagResponse, UserMangaResponse
+from handler.schema import HistoryRequest, TagRequest, TagResponse, UserMangaResponse, BookmarkRequest
 from handler.tag import add_user_tags, get_user_tags
 
 router = APIRouter()
 
 
 @router.get("/{user_id}/bookmarks", response_model=List[UserMangaResponse])
-async def get_bookmarks(user_id: Optional[str] = Header(default=None)):
-    if user_id is None:
-        raise HTTPException(status_code=400, detail="User ID is required.")
+async def get_bookmarks(user_id: str):
     return get_user_bookmarks(user_id=user_id)
+
+
+@router.post("/{user_id}/bookmarks", response_model=UserMangaResponse)
+async def post_bookmark(req: BookmarkRequest, user_id: str):
+    return add_user_bookmark(req=req, user_id=user_id)
+
+
+@router.delete("/{user_id}/bookmarks", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_bookmark(req: BookmarkRequest, user_id: str):
+    delete_user_bookmark(req=req, user_id=user_id)
+    return None
 
 
 @router.post("/{user_id}/history", status_code=status.HTTP_201_CREATED, response_model=History)

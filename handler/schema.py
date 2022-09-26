@@ -30,11 +30,17 @@ class MangaResponse(BaseModel):
     page_num: int
 
 
+class BookmarkRequest(BaseModel):
+    manga_id: str
+
+
 class HistoryRequest(BaseModel):
     manga_id: str
 
+
 class TagRequest(BaseModel):
     tags: List[str]
+
 
 class TagResponse(BaseModel):
     tags: List[str]
