@@ -5,6 +5,7 @@ from typing import List
 from PIL import Image
 from fastapi import HTTPException, UploadFile
 from repository.manga import manga_db
+from repository.bookmark import bookmark_db
 from repository.tag_manga import tag_manga_db
 
 from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
@@ -22,6 +23,7 @@ def get_recommendation(user_id: str) -> UserMangaResponse:
         is_faved=True,
         is_bookmarked=False
     )
+
 
 # POST /manga/upload
 def manga_upload(manga_id: str, files: List[UploadFile]):
@@ -63,19 +65,24 @@ def add_manga(req: MangaRequest) -> MangaResponse:
         manga_url=manga.manga_url,
     )
 
+
 # GET /manga/{manga_id}
-def get_manga(manga_id: str) -> MangaResponse:
+def get_manga(manga_id: str, user_id: str) -> UserMangaResponse:
     manga = manga_db.find_by_id(manga_id)
     if manga is None:
         raise HTTPException(status_code=404, detail="Manga not found.")
     tags = tag_manga_db.find_by_manga_id(manga_id)
     if tags is None:
         tags = []
-    return MangaResponse(
+
+    is_bookmarked = bookmark_db.is_bookmark(user_id=user_id, manga_id=manga_id)
+    return UserMangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
         author=manga.author,
         tags=[t.tag for t in tags],
         manga_url=manga.manga_url,
         page_num=manga.page_num,
+        is_faved=False,  # TODO: implement this
+        is_bookmarked=is_bookmarked,
     )

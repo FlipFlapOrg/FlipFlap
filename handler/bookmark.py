@@ -19,7 +19,7 @@ def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
     if res is None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Conflict with existing bookmark.")
-    m = get_manga(manga_id=req.manga_id)
+    m = get_manga(manga_id=req.manga_id, user_id=user_id)
     return UserMangaResponse(
         manga_id=m.manga_id,
         title=m.title,
