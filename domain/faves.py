@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Faves(BaseModel):
-    user: str
+    user_id: str
     manga_id: str
