@@ -16,9 +16,9 @@ def get_recommendation(user_id: str) -> UserMangaResponse:
         manga_id="4ed8e4ab-50c2-4e87-abf1-ebf2cc87dcf1",
         title="One Piece",
         author="Eiichiro Oda",
-        image_url=["https://i.pinimg.com/originals/4c/50/38/4c50386d57d207a960058fcc8a5609a8.jpg",
-                   "https://qph.cf2.quoracdn.net/main-qimg-835ac26be15950837045ba53cca30845-lq"],
         tags=["action", "adventure", "comedy", "fantasy", "shounen"],
+        page_num=20,
+        manga_url="https://shonenjumpplus.com/episode/10833519556325021794",
         is_faved=True,
         is_bookmarked=False
     )
@@ -60,6 +60,7 @@ def add_manga(req: MangaRequest) -> MangaResponse:
         author=manga.author,
         tags=req.tags,
         page_num=manga.page_num,
+        manga_url=manga.manga_url,
     )
 
 # GET /manga/{manga_id}
@@ -75,5 +76,6 @@ def get_manga(manga_id: str) -> MangaResponse:
         title=manga.title,
         author=manga.author,
         tags=[t.tag for t in tags],
+        manga_url=manga.manga_url,
         page_num=manga.page_num,
     )

@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from domain.tag_manga import TagManga
@@ -8,7 +7,7 @@ from repository.db import DB
 
 class TagMangaDB(DB):
     def __init__(self):
-        super().__init__('tag')
+        super().__init__('tag_manga')
 
     def add_tag_manga(self, manga_id: str, tag: str) -> TagManga:
         tm = TagManga(manga_id=manga_id, tag=tag)

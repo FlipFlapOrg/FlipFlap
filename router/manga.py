@@ -10,14 +10,14 @@ from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
 router = APIRouter()
 
 
-@router.get("/recommend", response_model=UserMangaResponse)
+@router.get("/recommend", response_model=UserMangaResponse, response_model_exclude_none=True)
 async def get_recommend(user_id: Optional[str] = Header(default=None)):
     if user_id is None:
         raise HTTPException(status_code=400, detail="User ID is required.")
     return get_recommendation(user_id=user_id)
 
 
-@router.post("/", response_model=MangaResponse)
+@router.post("/", response_model=MangaResponse, response_model_exclude_none=True)
 async def post_manga(req: MangaRequest):
     return add_manga(req)
 
@@ -27,7 +27,7 @@ async def post_upload(manga_id: str, files: List[UploadFile] = File(...)):
     manga_upload(manga_id, files)
     return {"message": "success"}
 
-@router.get("/{manga_id}", response_model=MangaResponse)
+@router.get("/{manga_id}", response_model=MangaResponse, response_model_exclude_none=True)
 async def get_manga_id(manga_id: str):
     return get_manga(manga_id=manga_id)
 
