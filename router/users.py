@@ -7,7 +7,7 @@ from handler.schema import UserMangaResponse
 router = APIRouter()
 
 
-@router.get("/users/{user_id}/bookmarks", response_model=List[UserMangaResponse])
+@router.get("/{user_id}/bookmarks", response_model=List[UserMangaResponse])
 async def get_bookmarks(user_id: Optional[str] = Header(default=None)):
     if user_id is None:
         raise HTTPException(status_code=400, detail="User ID is required.")
