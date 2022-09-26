@@ -12,12 +12,14 @@ class UserMangaResponse(BaseModel):
     is_faved: bool
     is_bookmarked: bool
 
+
 class MangaRequest(BaseModel):
     title: str
     author: str
     tags: List[str]
     page_num: int
     manga_url: Optional[str] = None
+
 
 class MangaResponse(BaseModel):
     manga_id: str
