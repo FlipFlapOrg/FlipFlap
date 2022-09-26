@@ -28,3 +28,8 @@ class MangaResponse(BaseModel):
     tags: List[str]
     manga_url: Optional[str] = None
     page_num: int
+
+
+class BookmarkRequest(BaseModel):
+    manga_id: str
+    user_id: str
