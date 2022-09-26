@@ -12,6 +12,7 @@ class UserMangaResponse(BaseModel):
     page_num: int
     is_faved: bool
     is_bookmarked: bool
+    faves_count: int
 
 
 class MangaRequest(BaseModel):

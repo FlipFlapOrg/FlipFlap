@@ -1,7 +1,8 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import HTTPException, status
 from repository.bookmark import bookmark_db
+from repository.faves import faves_db
 
 from handler.manga import get_manga
 from handler.schema import BookmarkRequest, UserMangaResponse
@@ -19,6 +20,8 @@ def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Conflict with existing bookmark.")
     m = get_manga(manga_id=req.manga_id, user_id=user_id)
+    is_faved = faves_db.is_faves(user_id=user_id, manga_id=req.manga_id)
+    fc = faves_db.count_faves(manga_id=req.manga_id)
     return UserMangaResponse(
         manga_id=m.manga_id,
         title=m.title,
@@ -26,8 +29,9 @@ def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
         tags=m.tags,
         page_num=m.page_num,
         manga_url=m.manga_url,
-        is_faved=False,  # TODO: implement this
+        is_faved=is_faved,
         is_bookmarked=True,
+        faves_count=fc,
     )
 
 

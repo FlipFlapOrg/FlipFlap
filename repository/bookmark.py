@@ -42,13 +42,21 @@ class BookmarkDB(DB):
 
         # TODO: left outer joinで書き直す
         fav_res = self.query(
-            'SELECT * FROM faves WHERE manga_id IN (SELECT manga_id FROM faves WHERE user_id = :user_id)', {'user_id': user_id})
+            'SELECT * FROM faves WHERE user_id = :user_id AND manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
         faves = defaultdict(lambda: False)
         for fav in fav_res:
             if fav is None:
                 continue
             faves[fav['manga_id']] = True
 
+        count_faves_res = self.query(
+            'SELECT manga_id, COUNT(*) c FROM faves WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id) GROUP BY manga_id', {'user_id': user_id})
+        count_faves = defaultdict(lambda: 0)
+        for count_fave in count_faves_res:
+            if count_fave is None:
+                continue
+            count_faves[count_fave['manga_id']] = count_fave['c']
+        
         return [UserMangaResponse(
             manga_id=r['manga_id'],
             title=r['title'],
@@ -58,6 +66,7 @@ class BookmarkDB(DB):
             page_num=r['page_num'],
             is_faved=faves[r['manga_id']],
             is_bookmarked=True,
+            faves_count=count_faves[r['manga_id']],
         ) for r in res if r is not None]
 
 

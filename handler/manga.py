@@ -2,10 +2,11 @@ import os
 import shutil
 from typing import List
 
-from PIL import Image
 from fastapi import HTTPException, UploadFile
-from repository.manga import manga_db
+from PIL import Image
 from repository.bookmark import bookmark_db
+from repository.faves import faves_db
+from repository.manga import manga_db
 from repository.tag_manga import tag_manga_db
 
 from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
@@ -21,7 +22,8 @@ def get_recommendation(user_id: str) -> UserMangaResponse:
         page_num=20,
         manga_url="https://shonenjumpplus.com/episode/10833519556325021794",
         is_faved=True,
-        is_bookmarked=False
+        is_bookmarked=False,
+        faves_count=1000000,
     )
 
 
@@ -76,6 +78,8 @@ def get_manga(manga_id: str, user_id: str) -> UserMangaResponse:
         tags = []
 
     is_bookmarked = bookmark_db.is_bookmark(user_id=user_id, manga_id=manga_id)
+    is_faved = faves_db.is_faves(user_id=user_id, manga_id=manga_id)
+    fc = faves_db.count_faves(manga_id=manga_id)
     return UserMangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
@@ -83,6 +87,7 @@ def get_manga(manga_id: str, user_id: str) -> UserMangaResponse:
         tags=[t.tag for t in tags],
         manga_url=manga.manga_url,
         page_num=manga.page_num,
-        is_faved=False,  # TODO: implement this
+        is_faved=is_faved,
         is_bookmarked=is_bookmarked,
+        faves_count=fc,
     )
