@@ -32,7 +32,6 @@ class MangaResponse(BaseModel):
 
 class BookmarkRequest(BaseModel):
     manga_id: str
-    user_id: str
 
 
 class HistoryRequest(BaseModel):

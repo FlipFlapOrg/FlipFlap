@@ -18,17 +18,14 @@ async def get_bookmarks(user_id: str):
 
 
 @router.post("/{user_id}/bookmarks", response_model=UserMangaResponse)
-async def post_bookmark(req: BookmarkRequest):
-    res = add_user_bookmark(req)
-    if res is None:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                            detail="Conflict with existing bookmark.")
-    return add_user_bookmark(req)
+async def post_bookmark(req: BookmarkRequest, user_id: str):
+    return add_user_bookmark(req=req, user_id=user_id)
 
 
 @router.delete("/{user_id}/bookmarks", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_bookmark(req: BookmarkRequest):
-    return delete_user_bookmark(req)
+async def delete_bookmark(req: BookmarkRequest, user_id: str):
+    delete_user_bookmark(req=req, user_id=user_id)
+    return None
 
 
 @router.post("/{user_id}/history", status_code=status.HTTP_201_CREATED, response_model=History)
