@@ -23,9 +23,15 @@ class DB(metaclass=ABCMeta):
 
     def find_one(self, keys: dict):
         return self.table.find_one(**keys)
-        
+
     def find_query(self, keys: dict):
         return self.table.find(**keys)
 
     def find_all(self):
         return self.table.find()
+
+    def query(self, query: str, *args, **kwargs):
+        return db.query(query, *args, **kwargs)
+
+    def insert_ignore(self, row: dict, keys: dict, ensure=None, types=None):
+        return self.table.insert_ignore(row, keys, ensure=None, types=None)
