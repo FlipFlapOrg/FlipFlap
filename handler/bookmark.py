@@ -1,5 +1,6 @@
 from typing import List, Optional
 from handler.schema import UserMangaResponse, BookmarkRequest
+from handler.manga import get_manga
 
 from fastapi import HTTPException, status
 
@@ -16,17 +17,14 @@ def get_user_bookmarks(user_id: str) -> List[UserMangaResponse]:
 def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
     res = bookmark_db.add_bookmark(user_id=user_id, manga_id=req.manga_id)
     if res is None:
-        raise HTTPException(status=status.HTTP_409_CONFLICT,
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Conflict with existing bookmark.")
-    m = manga_db.find_by_id(manga_id=req.manga_id)
-    if m is None:
-        raise HTTPException(status=status.HTTP_404_NOT_FOUND,
-                            detail="Manga not found.")
+    m = get_manga(manga_id=req.manga_id)
     return UserMangaResponse(
         manga_id=m.manga_id,
         title=m.title,
         author=m.author,
-        tags=[],  # TODO: implement this
+        tags=m.tags,
         manga_url=m.manga_url,
         is_faved=False,  # TODO: implement this
         is_bookmarked=True,
