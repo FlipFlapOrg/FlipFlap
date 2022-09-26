@@ -47,6 +47,7 @@ class BookmarkDB(DB):
             author=r['author'],
             tags=tags[r['manga_id']] if r['manga_id'] in tags else [],
             manga_url=r['manga_url'],
+            page_num=r['page_num'],
             is_faved=False,  # TODO: implement this
             is_bookmarked=True,
         ) for r in res]

@@ -9,6 +9,7 @@ class UserMangaResponse(BaseModel):
     author: str
     tags: List[str]
     manga_url: Optional[str] = None
+    page_num: int
     is_faved: bool
     is_bookmarked: bool
 
