@@ -4,25 +4,34 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
 from router import manga as manga_router
+from router import users as bookmark_router
 
 app = FastAPI()
 app.add_middleware(
-  CORSMiddleware,
-  allow_origins=['*'],
-  allow_credentials=True,
-  allow_methods=['*'],
-  allow_headers=['*']
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
 )
 
 app.include_router(
-  manga_router.router,
-  prefix="/manga",
-  tags=["manga"]
+    manga_router.router,
+    prefix="/manga",
+    tags=["manga"]
 )
+
+app.include_router(
+    bookmark_router.router,
+    prefix="/users",
+    tags=["users"]
+)
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
     return JSONResponse(status_code=400, content={"detail": exc.errors()})
+
 
 @app.get("/")
 async def read_root():
