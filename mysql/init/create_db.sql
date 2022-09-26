@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `manga` (
     `title` varchar(255) NOT NULL,
     `author` varchar(255) NOT NULL,
     `page_num` int NOT NULL,
-    `manga_url` varchar(1023),
+    `manga_url` text,
     `is_completed` boolean NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
