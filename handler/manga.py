@@ -1,5 +1,5 @@
 import os
-import shutil
+import random
 from typing import List
 
 from fastapi import HTTPException, UploadFile
@@ -14,16 +14,29 @@ from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
 
 # GET /manga/recommend
 def get_recommendation(user_id: str) -> UserMangaResponse:
+    all_manga = manga_db.find_all_manga()
+    manga_id = random.choice(all_manga).manga_id
+    
+    manga = manga_db.find_by_id(manga_id)
+    if manga is None:
+        raise HTTPException(status_code=404, detail="Manga not found.")
+    tags = tag_manga_db.find_by_manga_id(manga_id)
+    if tags is None:
+        tags = []
+
+    is_bookmarked = bookmark_db.is_bookmark(user_id=user_id, manga_id=manga_id)
+    is_faved = faves_db.is_faves(user_id=user_id, manga_id=manga_id)
+    fc = faves_db.count_faves(manga_id=manga_id)
     return UserMangaResponse(
-        manga_id="4ed8e4ab-50c2-4e87-abf1-ebf2cc87dcf1",
-        title="One Piece",
-        author="Eiichiro Oda",
-        tags=["action", "adventure", "comedy", "fantasy", "shounen"],
-        page_num=20,
-        manga_url="https://shonenjumpplus.com/episode/10833519556325021794",
-        is_faved=True,
-        is_bookmarked=False,
-        faves_count=1000000,
+        manga_id=manga.manga_id,
+        title=manga.title,
+        author=manga.author,
+        tags=[t.tag for t in tags],
+        manga_url=manga.manga_url,
+        page_num=manga.page_num,
+        is_faved=is_faved,
+        is_bookmarked=is_bookmarked,
+        faves_count=fc,
     )
 
 

@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import List, Optional
 
 from domain.manga import Manga
 
@@ -24,5 +24,9 @@ class MangaDB(DB):
     def find_by_title(self, title: str) -> Optional[Manga]:
         res = self.find_one({'title': title})
         return Manga(**res) if res else None
+    
+    def find_all_manga(self) -> List[Manga]:
+        res = self.find_all()
+        return [Manga(**r) for r in res if r is not None]
 
 manga_db = MangaDB()
