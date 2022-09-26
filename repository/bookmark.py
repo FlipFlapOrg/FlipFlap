@@ -33,14 +33,19 @@ class BookmarkDB(DB):
     def get_bookmarks(self, user_id: str) -> List[UserMangaResponse]:
         res = self.query(
             'SELECT * FROM bookmark INNER JOIN manga ON bookmark.manga_id = manga.manga_id WHERE user_id = :user_id', {'user_id': user_id})
-        # for r in res:
-        #     print(dict(r))
+        tag_res = self.query(
+            'SELECT * FROM tag_manga WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
+        tags = {}
+        for tag in tag_res:
+            if tag['manga_id'] not in tags:
+                tags[tag['manga_id']] = []
+            tags[tag['manga_id']].append(tag['tag'])
 
         return [UserMangaResponse(
             manga_id=r['manga_id'],
             title=r['title'],
             author=r['author'],
-            tags=[],
+            tags=tags[r['manga_id']] if r['manga_id'] in tags else [],
             manga_url=r['manga_url'],
             is_faved=False,  # TODO: implement this
             is_bookmarked=True,
