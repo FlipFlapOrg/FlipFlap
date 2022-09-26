@@ -28,3 +28,7 @@ class MangaResponse(BaseModel):
     tags: List[str]
     manga_url: Optional[str] = None
     page_num: int
+
+
+class HistoryRequest(BaseModel):
+    manga_id: str
