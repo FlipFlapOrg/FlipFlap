@@ -20,4 +20,4 @@ class HistoryDB(DB):
         res = self.find_query({'user_id': user_id})
         return [History(**r) for r in res if r is not None]
 
-history_db = History()
+history_db = HistoryDB()
