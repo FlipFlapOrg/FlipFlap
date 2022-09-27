@@ -1,9 +1,20 @@
+import os
 from typing import List
 import dataset
 from dataset import Table
 from abc import ABCMeta, abstractmethod
 
-db = dataset.connect()
+# get env
+username = os.environ.get("MARIADB_USERNAME", "user")
+password = os.environ.get("DB_PASSWORD", "password")
+hostname = os.environ.get("MARIADB_HOSTNAME", "localhost")
+database = os.environ.get("MARIADB_DATABASE", "flipflap")
+
+
+# connect to database
+db = dataset.connect(
+    f"mysql://{username}:{password}@{hostname}/{database}?charset=utf8mb4")
+
 print('db connected')
 
 
