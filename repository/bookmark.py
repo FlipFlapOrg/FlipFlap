@@ -43,7 +43,7 @@ class BookmarkDB(DB):
 
         service_res = self.query(
             'SELECT * FROM manga_service WHERE manga_id IN (SELECT manga_id FROM bookmark WHERE user_id = :user_id)', {'user_id': user_id})
-        services = defaultdict(List[ServiceUrl])
+        services = defaultdict(list)
         for service in service_res:
             if service is None:
                 continue
