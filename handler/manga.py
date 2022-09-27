@@ -7,6 +7,7 @@ from PIL import Image
 from repository.bookmark import bookmark_db
 from repository.faves import faves_db
 from repository.manga import manga_db
+from repository.manga_service import manga_service_db
 from repository.tag_manga import tag_manga_db
 
 from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
@@ -20,9 +21,15 @@ def get_recommendation(user_id: str) -> UserMangaResponse:
     manga = manga_db.find_by_id(manga_id)
     if manga is None:
         raise HTTPException(status_code=404, detail="Manga not found.")
+
     tags = tag_manga_db.find_by_manga_id(manga_id)
     if tags is None:
         tags = []
+    mss = manga_service_db.find_by_manga_id(manga_id)
+    next_info = [{
+        "service_name": ms.service_name,
+        "url": ms.url,
+    } for ms in mss]
 
     is_bookmarked = bookmark_db.is_bookmark(user_id=user_id, manga_id=manga_id)
     is_faved = faves_db.is_faves(user_id=user_id, manga_id=manga_id)
@@ -32,11 +39,11 @@ def get_recommendation(user_id: str) -> UserMangaResponse:
         title=manga.title,
         author=manga.author,
         tags=[t.tag for t in tags],
-        manga_url=manga.manga_url,
         page_num=manga.page_num,
         is_faved=is_faved,
         is_bookmarked=is_bookmarked,
         faves_count=fc,
+        next_info=next_info,
     )
 
 
@@ -68,16 +75,21 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
 # POST /manga
 def add_manga(req: MangaRequest) -> MangaResponse:
     manga = manga_db.add_manga(
-        title=req.title, author=req.author, page_num=req.page_num, manga_url=req.manga_url)
+        title=req.title, author=req.author, page_num=req.page_num)
+    # TODO: batch
     for tag in req.tags:
         tag_manga_db.add_tag_manga(manga_id=manga.manga_id, tag=tag)
+    # TODO: batch
+    for s in req.next_info:
+        manga_service_db.add_manga_service(
+            manga_id=manga.manga_id, service_name=s.service_name, url=s.url)
     return MangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
         author=manga.author,
         tags=req.tags,
         page_num=manga.page_num,
-        manga_url=manga.manga_url,
+        next_info=req.next_info,
     )
 
 
@@ -86,21 +98,28 @@ def get_manga(manga_id: str, user_id: str) -> UserMangaResponse:
     manga = manga_db.find_by_id(manga_id)
     if manga is None:
         raise HTTPException(status_code=404, detail="Manga not found.")
+
     tags = tag_manga_db.find_by_manga_id(manga_id)
     if tags is None:
         tags = []
+    mss = manga_service_db.find_by_manga_id(manga_id)
+    next_info = [{
+        "service_name": ms.service_name,
+        "url": ms.url,
+    } for ms in mss]
 
     is_bookmarked = bookmark_db.is_bookmark(user_id=user_id, manga_id=manga_id)
     is_faved = faves_db.is_faves(user_id=user_id, manga_id=manga_id)
     fc = faves_db.count_faves(manga_id=manga_id)
+
     return UserMangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
         author=manga.author,
         tags=[t.tag for t in tags],
-        manga_url=manga.manga_url,
         page_num=manga.page_num,
         is_faved=is_faved,
         is_bookmarked=is_bookmarked,
         faves_count=fc,
+        next_info=next_info,
     )

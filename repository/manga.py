@@ -10,10 +10,10 @@ class MangaDB(DB):
     def __init__(self):
         super().__init__('manga')
 
-    def add_manga(self, title: str, author: str, page_num: int, manga_url: Optional[str]) -> Manga:
+    def add_manga(self, title: str, author: str, page_num: int) -> Manga:
         manga_id = uuid.uuid4().hex
         m = Manga(manga_id=manga_id, title=title,
-                  author=author, page_num=page_num, manga_url=manga_url)
+                  author=author, page_num=page_num)
         self.insert(dict(m))
         return m
 
@@ -24,9 +24,10 @@ class MangaDB(DB):
     def find_by_title(self, title: str) -> Optional[Manga]:
         res = self.find_one({'title': title})
         return Manga(**res) if res else None
-    
+
     def find_all_manga(self) -> List[Manga]:
         res = self.find_all()
         return [Manga(**r) for r in res if r is not None]
+
 
 manga_db = MangaDB()

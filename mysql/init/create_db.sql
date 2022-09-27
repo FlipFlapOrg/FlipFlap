@@ -7,8 +7,15 @@ CREATE TABLE IF NOT EXISTS `manga` (
     `title` varchar(255) NOT NULL,
     `author` varchar(255) NOT NULL,
     `page_num` int NOT NULL,
-    `manga_url` text,
     `is_completed` boolean NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `manga_service` (
+    `manga_service_id` int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `manga_id` varchar(36) NOT NULL,
+    `service_name` varchar(255) NOT NULL,
+    `url` text,
+    INDEX `manga_idx` (`manga_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `history` (

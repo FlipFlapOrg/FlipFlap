@@ -1,6 +1,11 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
+
+
+class ServiceUrl(BaseModel):
+    service_name: str
+    url: str
 
 
 class UserMangaResponse(BaseModel):
@@ -8,11 +13,11 @@ class UserMangaResponse(BaseModel):
     title: str
     author: str
     tags: List[str]
-    manga_url: Optional[str] = None
     page_num: int
     is_faved: bool
     is_bookmarked: bool
     faves_count: int
+    next_info: List[ServiceUrl]
 
 
 class MangaRequest(BaseModel):
@@ -20,7 +25,7 @@ class MangaRequest(BaseModel):
     author: str
     tags: List[str]
     page_num: int
-    manga_url: Optional[str] = None
+    next_info: List[ServiceUrl]
 
 
 class MangaResponse(BaseModel):
@@ -28,8 +33,8 @@ class MangaResponse(BaseModel):
     title: str
     author: str
     tags: List[str]
-    manga_url: Optional[str] = None
     page_num: int
+    next_info: List[ServiceUrl]
 
 
 class BookmarkRequest(BaseModel):

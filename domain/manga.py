@@ -8,5 +8,4 @@ class Manga(BaseModel):
     title: str
     author: str
     page_num: int
-    manga_url: Optional[str] = None
     is_completed: bool = False

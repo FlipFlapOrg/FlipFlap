@@ -28,10 +28,10 @@ def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
         author=m.author,
         tags=m.tags,
         page_num=m.page_num,
-        manga_url=m.manga_url,
         is_faved=is_faved,
         is_bookmarked=True,
         faves_count=fc,
+        next_info=m.next_info,
     )
 
 
