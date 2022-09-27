@@ -3,11 +3,12 @@ type: runtime
 work_dir: .
 
 startup: |
+  pacman -S mariadb-libs
   pip install -r requirements.txt
 entrypoint: gunicorn main:app
 
 envs:
-  PYTHONPATH: /srv:$PYTHONPATH
+  PYTHONPATH: "/srv"
 http_proxy: 8000
 https: on
 
