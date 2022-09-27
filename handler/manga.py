@@ -56,9 +56,9 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
     for i, f in enumerate(files):
         try:
             img = Image.open(f.file).convert('RGB')
-            filename = f"/srv/data/{manga_id}/{i}.jpeg"
+            filename = f"/srv/data/{manga_id}/{i}.webp"
             print(filename)
-            img.save(filename, "JPEG")
+            img.save(filename, "WEBP")
         except Exception as e:
             print(e)
             raise HTTPException(

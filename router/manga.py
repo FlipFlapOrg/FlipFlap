@@ -37,7 +37,7 @@ async def get_manga_id(manga_id: str, user_id: Optional[str] = Header(default=No
 
 @router.get("/{manga_id}/image/{page_num}")
 async def get_manga_image(manga_id: str, page_num: int) -> FileResponse:
-    filename = f"/srv/data/{manga_id}/{page_num}.jpeg"
+    filename = f"/srv/data/{manga_id}/{page_num}.webp"
     if not os.path.exists(filename):
         raise HTTPException(status_code=404, detail="File not found.")
     return FileResponse(filename)
