@@ -11,3 +11,6 @@ http_proxy: 8000
 https: on
 
 use_mariadb: true
+
+branch:
+  main:
