@@ -1,5 +1,5 @@
 type: runtime
-__image: python:3.8-alpine
+__image: python:3.8
 
 work_dir: .
 
