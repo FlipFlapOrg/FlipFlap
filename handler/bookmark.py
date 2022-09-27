@@ -15,11 +15,11 @@ def get_user_bookmarks(user_id: str) -> List[UserMangaResponse]:
 
 # POST /users/{user_id}/bookmarks
 def add_user_bookmark(req: BookmarkRequest, user_id: str) -> UserMangaResponse:
+    m = get_manga(manga_id=req.manga_id, user_id=user_id)
     res = bookmark_db.add_bookmark(user_id=user_id, manga_id=req.manga_id)
     if res == False:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Conflict with existing bookmark.")
-    m = get_manga(manga_id=req.manga_id, user_id=user_id)
     is_faved = faves_db.is_faves(user_id=user_id, manga_id=req.manga_id)
     fc = faves_db.count_faves(manga_id=req.manga_id)
     return UserMangaResponse(
