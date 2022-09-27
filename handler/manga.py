@@ -4,6 +4,7 @@ from typing import List
 
 from fastapi import HTTPException, UploadFile
 from PIL import Image
+from domain.manga_service import MangaService
 from repository.bookmark import bookmark_db
 from repository.faves import faves_db
 from repository.manga import manga_db
@@ -76,13 +77,14 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
 def add_manga(req: MangaRequest) -> MangaResponse:
     manga = manga_db.add_manga(
         title=req.title, author=req.author, page_num=req.page_num)
-    # TODO: batch
-    for tag in req.tags:
-        tag_manga_db.add_tag_manga(manga_id=manga.manga_id, tag=tag)
-    # TODO: batch
-    for s in req.next_info:
-        manga_service_db.add_manga_service(
-            manga_id=manga.manga_id, service_name=s.service_name, url=s.url)
+
+    tag_manga_db.add_tags_manga(manga_id=manga.manga_id, tags=req.tags)
+    manga_service_db.add_manga_services(services=[MangaService(
+        manga_id=manga.manga_id,
+        service_name=nx.service_name,
+        url=nx.url,
+    ) for nx in req.next_info])
+
     return MangaResponse(
         manga_id=manga.manga_id,
         title=manga.title,
