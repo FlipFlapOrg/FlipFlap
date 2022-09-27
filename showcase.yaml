@@ -1,9 +1,10 @@
 type: runtime
+image: python:3.8-alpine
 
 work_dir: .
 
 startup: |
-  pacman -S mariadb-libs
+  apk add  --no-cache build-base mariadb-dev
   pip install -r requirements.txt
 entrypoint: gunicorn main:app
 
