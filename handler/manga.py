@@ -16,7 +16,7 @@ from handler.schema import MangaRequest, MangaResponse, UserMangaResponse
 def get_recommendation(user_id: str) -> UserMangaResponse:
     all_manga = manga_db.find_all_manga()
     manga_id = random.choice(all_manga).manga_id
-    
+
     manga = manga_db.find_by_id(manga_id)
     if manga is None:
         raise HTTPException(status_code=404, detail="Manga not found.")
@@ -45,11 +45,11 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
     manga = manga_db.find_by_id(manga_id)
     if manga is None:
         raise HTTPException(status_code=404, detail="Manga not found.")
-    os.makedirs(f"/tmp/{manga_id}", exist_ok=True)
+    os.makedirs(f"/srv/data/{manga_id}", exist_ok=True)
     for i, f in enumerate(files):
         try:
             img = Image.open(f.file).convert('RGB')
-            filename = f"/tmp/{manga_id}/{i}.jpeg"
+            filename = f"/srv/data/{manga_id}/{i}.jpeg"
             print(filename)
             img.save(filename, "JPEG")
         except Exception as e:
@@ -58,8 +58,8 @@ def manga_upload(manga_id: str, files: List[UploadFile]):
                 status_code=500, detail="internal server error")
         finally:
             f.file.close()
-    # /tmp/{manga_id} ディレクトリのファイルの数が page_num と一致するか確認する
-    num = len(os.listdir(f"/tmp/{manga_id}"))
+    # /srv/data/{manga_id} ディレクトリのファイルの数が page_num と一致するか確認する
+    num = len(os.listdir(f"/srv/data/{manga_id}"))
     if num == manga.page_num:
         manga.is_completed = True
         manga_db.update(dict(manga), ["manga_id"])

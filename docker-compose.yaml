@@ -12,7 +12,7 @@ services:
       MARIADB_HOSTNAME: db
       MARIADB_DATABASE: flipflap
     volumes:
-      - ./data:/tmp
+      - ./data:/srv/data
     depends_on:
       - db
 
