@@ -1,4 +1,4 @@
-fastapi
+fastapi>=0.85.0,<0.86.0
 uvicorn[standard]
 gunicorn
 dataset
