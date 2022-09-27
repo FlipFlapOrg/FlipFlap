@@ -22,9 +22,8 @@ async def post_manga(req: MangaRequest):
     return add_manga(req)
 
 
-@router.post("/upload", status_code=status.HTTP_201_CREATED)
+@router.post("/{manga_id}/upload/", status_code=status.HTTP_201_CREATED)
 async def post_upload(manga_id: str, files: List[UploadFile] = File(...)):
-    print(manga_id)
     manga_upload(manga_id, files)
     return {"message": "success"}
 
