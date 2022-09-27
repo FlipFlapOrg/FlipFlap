@@ -4,7 +4,6 @@ __image: python:3.8
 work_dir: .
 
 startup: |
-  apk add  --no-cache build-base mariadb-dev
   pip install -r requirements.txt
 entrypoint: gunicorn main:app
 
@@ -14,6 +13,8 @@ http_proxy: 8000
 https: on
 
 use_mariadb: true
+cname:
+  flipflap-server.trap.games
 
 branch:
   main:
