@@ -1,4 +1,4 @@
-from typing import Optional
+import datetime
 
 from pydantic import BaseModel
 
@@ -9,3 +9,4 @@ class Manga(BaseModel):
     author: str
     page_num: int
     is_completed: bool = False
+    created_at: datetime.datetime

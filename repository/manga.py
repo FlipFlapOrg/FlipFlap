@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from typing import List, Optional
 
@@ -12,8 +13,9 @@ class MangaDB(DB):
 
     def add_manga(self, title: str, author: str, page_num: int) -> Manga:
         manga_id = uuid.uuid4().hex
+        created_at = datetime.datetime.now()
         m = Manga(manga_id=manga_id, title=title,
-                  author=author, page_num=page_num)
+                  author=author, page_num=page_num, created_at=created_at)
         self.insert(dict(m))
         return m
 
