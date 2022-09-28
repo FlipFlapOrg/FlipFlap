@@ -43,7 +43,7 @@ async def delete_faves(req: FaveRequest, user_id: str):
 
 @router.post("/{user_id}/history", status_code=status.HTTP_201_CREATED, response_model=History)
 async def post_history(user_id: str, req: HistoryRequest):
-    return add_history(user_id=user_id, manga_id=req.manga_id)
+    return add_history(user_id=user_id, manga_id=req.manga_id, page_num=req.page_num)
 
 
 @router.post("/{user_id}/tags", status_code=status.HTTP_201_CREATED, response_model=TagResponse)

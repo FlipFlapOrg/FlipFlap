@@ -43,6 +43,7 @@ class BookmarkRequest(BaseModel):
 
 class HistoryRequest(BaseModel):
     manga_id: str
+    page_num: int
 
 
 class TagRequest(BaseModel):

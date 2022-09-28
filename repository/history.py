@@ -10,9 +10,9 @@ class HistoryDB(DB):
     def __init__(self):
         super().__init__('history')
 
-    def add_history_user(self, manga_id: str, user_id: str) -> History:
+    def add_history_user(self, manga_id: str, user_id: str, page_ratio: float) -> History:
         created_at = datetime.datetime.now()
-        tm = History(manga_id=manga_id, user_id=user_id, created_at=created_at)
+        tm = History(manga_id=manga_id, user_id=user_id, page_ratio=page_ratio, created_at=created_at)
         self.insert(dict(tm))
         return tm
     

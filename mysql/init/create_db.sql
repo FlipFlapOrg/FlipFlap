@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `history` (
     `history_id` int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `manga_id` varchar(36) NOT NULL,
     `user_id` varchar(36) NOT NULL,
+    `page_ratio` float NOT NULL,
     `created_at` datetime NOT NULL,
     INDEX `user_idx` (`user_id`, `created_at`),
     INDEX `manga_idx` (`manga_id`, `created_at`)
